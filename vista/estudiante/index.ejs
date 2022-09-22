@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Estudiantes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS v5.2.0-beta1 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/">Estudiantes</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="m-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-end">
+          <button type="button" class="btn btn-success px-3" data-bs-toggle="modal" data-bs-target="#modalForm" onclick="setAccion('C', null);">Agregar Registro</button>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Carnet</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Direccion</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Email</th>
+                <th scope="col">Fecha de Nacimiento</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% resultado.forEach((dato)=> { %>
+                <tr>
+                  <td><%= dato.id_estudiante %></td>
+                  <td><%= dato.carnet %></td>
+                  <td><%= dato.nombres ? dato.nombres : "- - -" %></td>
+                  <td><%= dato.apellidos ? dato.apellidos : "- - -" %></td>
+                  <td><%= dato.direccion ? dato.direccion : "- - -" %></td>
+                  <td><%= dato.telefono ? dato.telefono : "- - -" %></td>
+                  <td><%= dato.genero == 'M' ? "Masculino" : "Femenino" %></td>
+                  <td><%= dato.email ? dato.email : "- - -" %></td>
+                  <td><%= dato.nacimiento ? dato.nacimiento : "- - -" %></td>
+                  <td>
+                    <button type="button" class="btn btn-primary px-3" data-bs-toggle="modal" data-bs-target="#modalForm" onclick="setAccion('U', <%= JSON.stringify(dato) %>);">Editar</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-danger px-3" onclick="openDel(<%= dato.id_estudiante %>);">Eliminar</button>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    <footer class="bg-dark text-center p-3 text-white">
+      DOMY - UMG Desarrollo Web
+    </footer>
+
+    <!-- Modal Body-->
+    <div class="modal modal-lg fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitleId">Estudiante</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <form id="form1" action="/cud" method="post">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="id_estudiante" class="form-label">ID</label>
+                    <input type="number" name="id_estudiante" id="id_estudiante" class="form-control" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label for="carnet" class="form-label">Carnet *</label>
+                    <input type="text" pattern="E[0-9]{3}" name="carnet" id="carnet" class="form-control" placeholder="Ej: E001" autofocus required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="nombres" class="form-label">Nombres</label>
+                    <input type="text" name="nombres" id="nombres" class="form-control" placeholder="Ej: Donal Obed">
+                  </div>
+                  <div class="mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" name="apellidos" id="apellidos" class="form-control" placeholder="Ej: Morales Reyes">
+                  </div>
+                  <div class="mb-3">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Ej: Ciudad">
+                  </div>
+                  <div class="mb-3">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="number" name="telefono" id="telefono" class="form-control" placeholder="Ej: 00000000">
+                  </div>
+                  <div class="mb-3">
+                    <label for="genero" class="form-label">Genero</label>
+                    <select class="form-control" name="genero" id="genero" required>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Ej: x@y.z">
+                  </div>
+                  <div>
+                    <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" placeholder="Ej: YYYY-MM-DD">
+                  </div>
+                </div>
+                <input type="hidden" id="accion" name="accion" value="C">
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" form="form1" class="btn btn-success">Guardar Datos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+    <script>
+      function setAccion(value, dato) {
+        document.getElementById('accion').value = value;
+        document.getElementById('id_estudiante').value = dato ? dato.id_estudiante : 0;
+        document.getElementById('carnet').value = dato ? dato.carnet : '';
+        document.getElementById('nombres').value = dato ? dato.nombres : '';
+        document.getElementById('apellidos').value = dato ? dato.apellidos : '';
+        document.getElementById('direccion').value = dato ? dato.direccion : '';
+        document.getElementById('telefono').value = dato ? dato.telefono : '';
+        document.querySelector('#genero').value = dato ? dato.genero.data[0] == 77 ? 'M' : 'F' : 'M';
+        document.getElementById('email').value = dato ? dato.email : '';
+        document.getElementById('fecha_nacimiento').value = dato ? dato.fecha_nacimiento : '';
+      }
+
+      function openDel(id_estudiante) {
+        const res = confirm("Esta seguro que desea eliminar el registro?");
+        if (res) {
+          document.getElementById('id_estudiante').value = id_estudiante;
+          document.getElementById('accion').value = 'D';
+          document.getElementById('form1').submit();
+        }
+      }
+    </script>
+  </body>
+</html>
